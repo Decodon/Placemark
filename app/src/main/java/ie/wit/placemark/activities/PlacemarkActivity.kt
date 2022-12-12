@@ -31,10 +31,11 @@ class PlacemarkActivity : AppCompatActivity() {
                 {
                     i("Placemark[$i]:${this.app.placemarks[i]}")
                 }
+                setResult(RESULT_OK)
+                finish()
             }
             else {
-                Snackbar
-                    .make(it,"Please enter a title", Snackbar.LENGTH_LONG)
+                Snackbar.make(it,"Please Enter a title", Snackbar.LENGTH_LONG)
                     .show()
             }
         }
