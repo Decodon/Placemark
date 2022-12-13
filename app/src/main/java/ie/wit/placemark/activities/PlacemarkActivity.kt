@@ -40,7 +40,7 @@ class PlacemarkActivity : AppCompatActivity() {
                 finish()
             }
             else {
-                Snackbar.make(it,"Please Enter a title", Snackbar.LENGTH_LONG)
+                Snackbar.make(it, R.string.enter_placemark_title, Snackbar.LENGTH_LONG)
                     .show()
             }
         }
