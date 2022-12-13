@@ -16,6 +16,7 @@ class PlacemarkActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPlacemarkBinding
     var placemark = PlacemarkModel() //Creating placemark as a class member of placemark model
     lateinit var app: MainApp
+    var edit = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +27,7 @@ class PlacemarkActivity : AppCompatActivity() {
         app = application as MainApp
 
         if (intent.hasExtra("placemark_edit")) {
+            edit = true
             placemark = intent.extras?.getParcelable("placemark_edit")!!
             binding.placemarkTitle.setText(placemark.title)
             binding.description.setText(placemark.description)
@@ -35,15 +37,18 @@ class PlacemarkActivity : AppCompatActivity() {
         binding.btnAdd.setOnClickListener() {
             placemark.title = binding.placemarkTitle.text.toString()
             placemark.description = binding.description.text.toString()
-            if (placemark.title.isNotEmpty()) {
-                app.placemarks.create(placemark.copy())
-                setResult(RESULT_OK)
-                finish()
-            }
-            else {
-                Snackbar.make(it, R.string.enter_placemark_title, Snackbar.LENGTH_LONG)
+            if (placemark.title.isEmpty()) {
+                Snackbar.make(it,R.string.enter_placemark_title, Snackbar.LENGTH_LONG)
                     .show()
+            } else {
+                if (edit) {
+                    app.placemarks.update(placemark.copy())
+                } else {
+                    app.placemarks.create(placemark.copy())
+                }
             }
+            setResult(RESULT_OK)
+            finish()
         }
     }
 
