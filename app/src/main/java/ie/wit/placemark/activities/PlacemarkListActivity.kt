@@ -51,4 +51,5 @@ class PlacemarkListActivity : AppCompatActivity(), PlacemarkListener {
         launcherIntent.putExtra("placemark_edit", placemark)
         startActivityForResult(launcherIntent,0)
     }
+
 }
