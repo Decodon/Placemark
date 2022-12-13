@@ -3,20 +3,17 @@ package ie.wit.placemark.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
-import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import ie.wit.placemark.R
 import ie.wit.placemark.adapters.PlacemarkAdapter
+import ie.wit.placemark.adapters.PlacemarkListener
 import ie.wit.placemark.databinding.ActivityPlacemarkListBinding
-import ie.wit.placemark.databinding.CardPlacemarkBinding
 import ie.wit.placemark.main.MainApp
 import ie.wit.placemark.models.PlacemarkModel
 
-class PlacemarkListActivity : AppCompatActivity() {
+class PlacemarkListActivity : AppCompatActivity(), PlacemarkListener {
 
     lateinit var app: MainApp
     private lateinit var binding: ActivityPlacemarkListBinding
@@ -25,16 +22,13 @@ class PlacemarkListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityPlacemarkListBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         binding.toolbar.title = title
         setSupportActionBar(binding.toolbar)
-
         app = application as MainApp
 
         val layoutManager = LinearLayoutManager(this)
         binding.recyclerView.layoutManager = layoutManager
-       //binding.recyclerView.adapter = PlacemarkAdapter(app.placemarks)
-        binding.recyclerView.adapter = PlacemarkAdapter(app.placemarks.findAll())
+        binding.recyclerView.adapter = PlacemarkAdapter(app.placemarks.findAll(),this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -50,5 +44,10 @@ class PlacemarkListActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onPlacemarkClick(placemark: PlacemarkModel) {
+        val launcherIntent = Intent(this, PlacemarkActivity::class.java)
+        startActivityForResult(launcherIntent,0)
     }
 }
