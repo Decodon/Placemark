@@ -25,21 +25,16 @@ class PlacemarkActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbarAdd)
         app = application as MainApp
 
-        binding.btnAdd.setOnClickListener(){
-            placemark.title = binding.placemarkTitle.text.toString() //Using placemark as a class member in the event handler
+        binding.btnAdd.setOnClickListener() {
+            placemark.title = binding.placemarkTitle.text.toString()
             placemark.description = binding.description.text.toString()
-            if (placemark.title.isNotEmpty() && placemark.description.isNotEmpty()){
-                app.placemarks.add(placemark.copy())
-                i("add Button Pressed said: $placemark")
-                for (i in app.placemarks.indices)
-                {
-                    i("Placemark[$i]:${this.app.placemarks[i]}")
-                }
+            if (placemark.title.isNotEmpty()) {
+                app.placemarks.create(placemark.copy())
                 setResult(RESULT_OK)
                 finish()
             }
             else {
-                Snackbar.make(it,"Please Enter a title/description", Snackbar.LENGTH_LONG)
+                Snackbar.make(it,"Please Enter a title", Snackbar.LENGTH_LONG)
                     .show()
             }
         }
