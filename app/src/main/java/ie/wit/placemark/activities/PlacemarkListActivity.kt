@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ie.wit.placemark.R
+import ie.wit.placemark.adapters.PlacemarkAdapter
 import ie.wit.placemark.databinding.ActivityPlacemarkListBinding
 import ie.wit.placemark.databinding.CardPlacemarkBinding
 import ie.wit.placemark.main.MainApp
@@ -49,33 +50,4 @@ class PlacemarkListActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
-}
-
-class PlacemarkAdapter constructor(private var placemarks: List<PlacemarkModel>) :
-    RecyclerView.Adapter<PlacemarkAdapter.MainHolder>() {
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainHolder {
-        val binding = CardPlacemarkBinding
-            .inflate(LayoutInflater.from(parent.context), parent, false)
-
-        return MainHolder(binding)
-    }
-
-    override fun onBindViewHolder(holder: MainHolder, position: Int) {
-        val placemark = placemarks[holder.adapterPosition]
-        holder.bind(placemark)
-    }
-
-    override fun getItemCount(): Int = placemarks.size
-
-    class MainHolder(private val binding : CardPlacemarkBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-
-        fun bind(placemark: PlacemarkModel) {
-            binding.placemarkTitle.text = placemark.title
-            binding.description.text = placemark.description
-        }
-    }
-
-
 }
