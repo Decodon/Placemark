@@ -2,7 +2,10 @@ package ie.wit.placemark.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import com.google.android.material.snackbar.Snackbar
+import ie.wit.placemark.R
 import ie.wit.placemark.databinding.ActivityPlacemarkBinding
 import ie.wit.placemark.main.MainApp
 import ie.wit.placemark.models.PlacemarkModel
@@ -18,9 +21,10 @@ class PlacemarkActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityPlacemarkBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        binding.toolbarAdd.title = title
+        setSupportActionBar(binding.toolbarAdd)
         app = application as MainApp
-        i("Placemark started")
+
         binding.btnAdd.setOnClickListener(){
             placemark.title = binding.placemarkTitle.text.toString() //Using placemark as a class member in the event handler
             placemark.description = binding.description.text.toString()
@@ -35,9 +39,23 @@ class PlacemarkActivity : AppCompatActivity() {
                 finish()
             }
             else {
-                Snackbar.make(it,"Please Enter a title", Snackbar.LENGTH_LONG)
+                Snackbar.make(it,"Please Enter a title/description", Snackbar.LENGTH_LONG)
                     .show()
             }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_placemark, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.item_cancel -> {
+                finish()
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }
