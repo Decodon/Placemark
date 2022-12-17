@@ -72,6 +72,10 @@ class PlacemarkActivity : AppCompatActivity() {
         binding.chooseImage.setOnClickListener {
             showImagePicker(imageIntentLauncher)
         }
+
+        binding.placemarkLocation.setOnClickListener {
+            i ("Set Location Pressed")
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
