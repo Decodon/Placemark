@@ -14,7 +14,9 @@ import ie.wit.placemark.R
 import ie.wit.placemark.databinding.ActivityPlacemarkBinding
 import ie.wit.placemark.helpers.showImagePicker
 import ie.wit.placemark.main.MainApp
+import ie.wit.placemark.models.Location
 import ie.wit.placemark.models.PlacemarkModel
+import ie.wit.placemark.activities.MapActivity
 import timber.log.Timber
 import timber.log.Timber.i
 
@@ -80,7 +82,9 @@ class PlacemarkActivity : AppCompatActivity() {
         }
 
         binding.placemarkLocation.setOnClickListener {
+            val location = Location(52.245696, -7.139102, 15f)
             val launcherIntent = Intent(this, MapActivity::class.java)
+                .putExtra("location", location)
             mapIntentLauncher.launch(launcherIntent)
         }
     }
