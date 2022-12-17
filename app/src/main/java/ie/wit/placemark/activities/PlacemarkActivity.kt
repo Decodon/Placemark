@@ -14,16 +14,20 @@ import ie.wit.placemark.R
 import ie.wit.placemark.databinding.ActivityPlacemarkBinding
 import ie.wit.placemark.helpers.showImagePicker
 import ie.wit.placemark.main.MainApp
+import ie.wit.placemark.models.Location
 import ie.wit.placemark.models.PlacemarkModel
+import ie.wit.placemark.activities.MapActivity
 import timber.log.Timber
 import timber.log.Timber.i
 
 class PlacemarkActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPlacemarkBinding
     private lateinit var imageIntentLauncher : ActivityResultLauncher<Intent>
+    private lateinit var mapIntentLauncher : ActivityResultLauncher<Intent>
     var placemark = PlacemarkModel() //Creating placemark as a class member of placemark model
     lateinit var app: MainApp
     var edit = false
+    //var location = Location(52.245696, -7.139102, 15f)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +37,7 @@ class PlacemarkActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbarAdd)
         app = application as MainApp
         registerImagePickerCallback()
+        registerMapCallback()
 
         if (intent.hasExtra("placemark_edit")) {
             edit = true
@@ -72,6 +77,22 @@ class PlacemarkActivity : AppCompatActivity() {
         binding.chooseImage.setOnClickListener {
             showImagePicker(imageIntentLauncher)
         }
+
+        binding.placemarkLocation.setOnClickListener {
+            i ("Set Location Pressed")
+        }
+
+        binding.placemarkLocation.setOnClickListener {
+            val location = Location(52.245696, -7.139102, 15f)
+            if (placemark.zoom != 0f) {
+                location.lat =  placemark.lat
+                location.lng = placemark.lng
+                location.zoom = placemark.zoom
+            }
+            val launcherIntent = Intent(this, MapActivity::class.java)
+                .putExtra("location", location)
+            mapIntentLauncher.launch(launcherIntent)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -101,6 +122,26 @@ class PlacemarkActivity : AppCompatActivity() {
                                 .load(placemark.image)
                                 .into(binding.placemarkImage)
                             binding.chooseImage.setText(R.string.change_placemark_image)
+                        } // end of if
+                    }
+                    RESULT_CANCELED -> { } else -> { }
+                }
+            }
+    }
+
+    private fun registerMapCallback() {
+        mapIntentLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+            { result ->
+                when (result.resultCode) {
+                    RESULT_OK -> {
+                        if (result.data != null) {
+                            i("Got Location ${result.data.toString()}")
+                            val location = result.data!!.extras?.getParcelable<Location>("location")!!
+                            i("Location == $location")
+                            placemark.lat = location.lat
+                            placemark.lng = location.lng
+                            placemark.zoom = location.zoom
                         } // end of if
                     }
                     RESULT_CANCELED -> { } else -> { }
