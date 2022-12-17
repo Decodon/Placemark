@@ -21,6 +21,7 @@ import timber.log.Timber.i
 class PlacemarkActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPlacemarkBinding
     private lateinit var imageIntentLauncher : ActivityResultLauncher<Intent>
+    private lateinit var mapIntentLauncher : ActivityResultLauncher<Intent>
     var placemark = PlacemarkModel() //Creating placemark as a class member of placemark model
     lateinit var app: MainApp
     var edit = false
@@ -33,6 +34,7 @@ class PlacemarkActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbarAdd)
         app = application as MainApp
         registerImagePickerCallback()
+        registerMapCallback()
 
         if (intent.hasExtra("placemark_edit")) {
             edit = true
@@ -76,6 +78,11 @@ class PlacemarkActivity : AppCompatActivity() {
         binding.placemarkLocation.setOnClickListener {
             i ("Set Location Pressed")
         }
+
+        binding.placemarkLocation.setOnClickListener {
+            val launcherIntent = Intent(this, MapActivity::class.java)
+            mapIntentLauncher.launch(launcherIntent)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -110,5 +117,11 @@ class PlacemarkActivity : AppCompatActivity() {
                     RESULT_CANCELED -> { } else -> { }
                 }
             }
+    }
+
+    private fun registerMapCallback() {
+        mapIntentLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+            { i("Map Loaded") }
     }
 }
