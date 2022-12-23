@@ -39,6 +39,7 @@ class PlacemarkActivity : AppCompatActivity() {
         registerImagePickerCallback()
         registerMapCallback()
 
+
         if (intent.hasExtra("placemark_edit")) {
             edit = true
             placemark = intent.extras?.getParcelable("placemark_edit")!!
@@ -95,13 +96,19 @@ class PlacemarkActivity : AppCompatActivity() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_placemark, menu)
+        if (edit && menu != null) menu.getItem(0).setVisible(true)
         return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.item_delete -> {
+                app.placemarks.delete(placemark)
+                finish()
+            }
             R.id.item_cancel -> {
                 finish()
             }
