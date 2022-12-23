@@ -33,8 +33,8 @@ class PlacemarkActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityPlacemarkBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.toolbarAdd.title = title
-        setSupportActionBar(binding.toolbarAdd)
+        binding.toolbar.title = title
+        setSupportActionBar(binding.toolbar)
         app = application as MainApp
         registerImagePickerCallback()
         registerMapCallback()
