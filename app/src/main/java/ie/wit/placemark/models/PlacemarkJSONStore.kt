@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import com.google.gson.*
 import com.google.gson.reflect.TypeToken
+
 import ie.wit.placemark.helpers.*
 import timber.log.Timber
 import java.lang.reflect.Type
@@ -32,6 +33,11 @@ class PlacemarkJSONStore(private val context: Context) : PlacemarkStore {
     override fun findAll(): MutableList<PlacemarkModel> {
         logAll()
         return placemarks
+    }
+
+    override fun findById(id: Long): PlacemarkModel? {
+        val foundPlacemark: PlacemarkModel? = placemarks.find {it.id == id }
+        return foundPlacemark
     }
 
     override fun create(placemark: PlacemarkModel) {
@@ -75,7 +81,7 @@ class PlacemarkJSONStore(private val context: Context) : PlacemarkStore {
     }
 }
 
-class UriParser : JsonDeserializer<Uri>,JsonSerializer<Uri> {
+class UriParser : JsonDeserializer<Uri>, JsonSerializer<Uri> {
     override fun deserialize(
         json: JsonElement?,
         typeOfT: Type?,

@@ -20,6 +20,7 @@ class PlacemarkListActivity : AppCompatActivity(), PlacemarkListener {
     lateinit var app: MainApp
     private lateinit var binding: ActivityPlacemarkListBinding
     private lateinit var refreshIntentLauncher : ActivityResultLauncher<Intent>
+    private lateinit var mapsIntentLauncher : ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +37,7 @@ class PlacemarkListActivity : AppCompatActivity(), PlacemarkListener {
         loadPlacemarks()
 
         registerRefreshCallback()
+        registerMapCallback()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -48,6 +50,10 @@ class PlacemarkListActivity : AppCompatActivity(), PlacemarkListener {
             R.id.item_add -> {
                 val launcherIntent = Intent(this, PlacemarkActivity::class.java)
                 refreshIntentLauncher.launch(launcherIntent)
+            }
+            R.id.item_map -> {
+                val launcherIntent = Intent(this, PlacemarkMapsActivity::class.java)
+                mapsIntentLauncher.launch(launcherIntent)
             }
         }
         return super.onOptionsItemSelected(item)
@@ -72,5 +78,11 @@ class PlacemarkListActivity : AppCompatActivity(), PlacemarkListener {
     fun showPlacemarks(placemarks: List<PlacemarkModel>){
         binding.recyclerView.adapter = PlacemarkAdapter(placemarks, this)
         binding.recyclerView.adapter?.notifyDataSetChanged()
+    }
+
+    private fun registerMapCallback() {
+        mapsIntentLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+            { }
     }
 }
