@@ -1,4 +1,4 @@
-package ie.wit.placemark.activities
+package ie.wit.placemark.views.placemark
 
 import android.net.Uri
 import android.os.Bundle
@@ -10,7 +10,6 @@ import com.squareup.picasso.Picasso
 import ie.wit.placemark.R
 import ie.wit.placemark.databinding.ActivityPlacemarkBinding
 import ie.wit.placemark.models.PlacemarkModel
-import ie.wit.placemark.views.placemark.PlacemarkPresenter
 import timber.log.Timber.i
 
 class PlacemarkView : AppCompatActivity() {

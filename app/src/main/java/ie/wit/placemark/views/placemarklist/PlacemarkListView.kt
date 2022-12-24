@@ -1,4 +1,4 @@
-package ie.wit.placemark.activities
+package ie.wit.placemark.views.placemarklist
 
 import android.os.Bundle
 import android.view.Menu

@@ -4,18 +4,13 @@ import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import com.squareup.picasso.MemoryPolicy
-import com.squareup.picasso.NetworkPolicy
-import com.squareup.picasso.Picasso
-import ie.wit.placemark.R
-import ie.wit.placemark.activities.PlacemarkView
+import ie.wit.placemark.views.editlocation.EditLocationView
 import ie.wit.placemark.databinding.ActivityPlacemarkBinding
 import ie.wit.placemark.helpers.showImagePicker
 import ie.wit.placemark.main.MainApp
 import ie.wit.placemark.models.Location
 import ie.wit.placemark.models.PlacemarkModel
 
-import ie.wit.placemark.views.location.EditLocationView
 import timber.log.Timber
 
 class PlacemarkPresenter(private val view: PlacemarkView) {

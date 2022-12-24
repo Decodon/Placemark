@@ -1,8 +1,10 @@
-package ie.wit.placemark.activities
+package ie.wit.placemark.views.placemarklist
 
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import ie.wit.placemark.activities.PlacemarkMapsActivity
+import ie.wit.placemark.views.placemark.PlacemarkView
 import ie.wit.placemark.main.MainApp
 import ie.wit.placemark.models.PlacemarkModel
 
