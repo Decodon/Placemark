@@ -1,20 +1,14 @@
 package ie.wit.placemark.activities
 
-import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
 import ie.wit.placemark.R
 import ie.wit.placemark.databinding.ActivityPlacemarkBinding
-import ie.wit.placemark.helpers.showImagePicker
-import ie.wit.placemark.main.MainApp
-import ie.wit.placemark.models.Location
 import ie.wit.placemark.models.PlacemarkModel
 import ie.wit.placemark.views.placemark.PlacemarkPresenter
 import timber.log.Timber.i
