@@ -5,6 +5,7 @@ plugins {
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
 
+
 android {
     namespace 'ie.wit.placemark'
     compileSdk 32

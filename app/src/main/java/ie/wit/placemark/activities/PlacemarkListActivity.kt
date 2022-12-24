@@ -48,7 +48,7 @@ class PlacemarkListActivity : AppCompatActivity(), PlacemarkListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.item_add -> {
-                val launcherIntent = Intent(this, PlacemarkActivity::class.java)
+                val launcherIntent = Intent(this, PlacemarkView::class.java)
                 refreshIntentLauncher.launch(launcherIntent)
             }
             R.id.item_map -> {
@@ -60,7 +60,7 @@ class PlacemarkListActivity : AppCompatActivity(), PlacemarkListener {
     }
 
     override fun onPlacemarkClick(placemark: PlacemarkModel) {
-        val launcherIntent = Intent(this, PlacemarkActivity::class.java)
+        val launcherIntent = Intent(this, PlacemarkView::class.java)
         launcherIntent.putExtra("placemark_edit", placemark)
         refreshIntentLauncher.launch(launcherIntent)
     }

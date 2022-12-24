@@ -39,7 +39,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.PlacemarkActivity" />
+        <activity android:name=".activities.PlacemarkView" />
     </application>
 
 </manifest>
