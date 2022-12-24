@@ -3,7 +3,7 @@ package ie.wit.placemark.views.placemarklist
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import ie.wit.placemark.activities.PlacemarkMapsActivity
+import ie.wit.placemark.views.map.PlacemarkMapView
 import ie.wit.placemark.views.placemark.PlacemarkView
 import ie.wit.placemark.main.MainApp
 import ie.wit.placemark.models.PlacemarkModel
@@ -34,7 +34,7 @@ class PlacemarkListPresenter(val view: PlacemarkListView) {
     }
 
     fun doShowPlacemarksMap() {
-        val launcherIntent = Intent(view, PlacemarkMapsActivity::class.java)
+        val launcherIntent = Intent(view, PlacemarkMapView::class.java)
         refreshIntentLauncher.launch(launcherIntent)
     }
     private fun registerRefreshCallback() {

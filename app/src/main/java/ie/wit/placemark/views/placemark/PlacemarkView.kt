@@ -15,12 +15,11 @@ import timber.log.Timber.i
 class PlacemarkView : AppCompatActivity() {
 
     private lateinit var binding: ActivityPlacemarkBinding
-    private lateinit var presenter: PlacemarkPresenter
+    lateinit var presenter: PlacemarkPresenter
     var placemark = PlacemarkModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
 
         binding = ActivityPlacemarkBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -30,12 +29,10 @@ class PlacemarkView : AppCompatActivity() {
         presenter = PlacemarkPresenter(this)
 
         binding.chooseImage.setOnClickListener {
-            presenter.cachePlacemark(binding.placemarkTitle.text.toString(), binding.description.text.toString())
             presenter.doSelectImage()
         }
 
         binding.placemarkLocation.setOnClickListener {
-            presenter.cachePlacemark(binding.placemarkTitle.text.toString(), binding.description.text.toString())
             presenter.doSetLocation()
         }
 
@@ -43,13 +40,6 @@ class PlacemarkView : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_placemark, menu)
-        val deleteMenu: MenuItem = menu.findItem(R.id.item_delete)
-        if (presenter.edit){
-            deleteMenu.setVisible(true)
-        }
-        else{
-            deleteMenu.setVisible(false)
-        }
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -85,13 +75,4 @@ class PlacemarkView : AppCompatActivity() {
         }
 
     }
-
-    fun updateImage(image: Uri){
-        i("Image updated")
-        Picasso.get()
-            .load(image)
-            .into(binding.placemarkImage)
-        binding.chooseImage.setText(R.string.change_placemark_image)
-    }
-
 }

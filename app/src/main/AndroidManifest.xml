@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Placemark">
         <activity
-            android:name=".activities.PlacemarkMapsActivity"
+            android:name=".views.map.PlacemarkMapView"
             android:exported="false"
             android:label="@string/title_activity_placemark_maps"
             android:theme="@style/Theme.Placemark.NoActionBar">

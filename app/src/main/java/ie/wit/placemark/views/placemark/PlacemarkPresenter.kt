@@ -4,6 +4,10 @@ import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.squareup.picasso.MemoryPolicy
+import com.squareup.picasso.NetworkPolicy
+import com.squareup.picasso.Picasso
+import ie.wit.placemark.R
 import ie.wit.placemark.views.editlocation.EditLocationView
 import ie.wit.placemark.databinding.ActivityPlacemarkBinding
 import ie.wit.placemark.helpers.showImagePicker
@@ -86,12 +90,16 @@ class PlacemarkPresenter(private val view: PlacemarkView) {
                         if (result.data != null) {
                             Timber.i("Got Result ${result.data!!.data}")
                             placemark.image = result.data!!.data!!
-                            view.updateImage(placemark.image)
+                            Picasso.get()
+                                .load(placemark.image)
+                                .networkPolicy(NetworkPolicy.NO_CACHE)
+                                .memoryPolicy(MemoryPolicy.NO_CACHE)
+                                .into(binding.placemarkImage)
+                            binding.chooseImage.setText(R.string.change_placemark_image)
                         }
                     }
                     AppCompatActivity.RESULT_CANCELED -> { } else -> { }
                 }
-
             }
     }
 
