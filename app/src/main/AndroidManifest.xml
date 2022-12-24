@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Placemark">
         <activity
-            android:name=".activities.PlacemarkMapsActivity"
+            android:name=".views.map.PlacemarkMapView"
             android:exported="false"
             android:label="@string/title_activity_placemark_maps"
             android:theme="@style/Theme.Placemark.NoActionBar">
@@ -27,11 +27,11 @@
             android:value="${MAPS_API_KEY}" />
 
         <activity
-            android:name=".activities.MapActivity"
+            android:name=".views.editlocation.EditLocationView"
             android:exported="true"
             android:label="@string/title_activity_map" />
         <activity
-            android:name=".activities.PlacemarkListActivity"
+            android:name=".views.placemarklist.PlacemarkListView"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -39,7 +39,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.PlacemarkActivity" />
+        <activity android:name=".views.placemark.PlacemarkView" />
     </application>
 
 </manifest>
