@@ -29,10 +29,12 @@ class PlacemarkView : AppCompatActivity() {
         presenter = PlacemarkPresenter(this)
 
         binding.chooseImage.setOnClickListener {
+            presenter.cachePlacemark(binding.placemarkTitle.text.toString(), binding.description.text.toString())
             presenter.doSelectImage()
         }
 
         binding.placemarkLocation.setOnClickListener {
+            presenter.cachePlacemark(binding.placemarkTitle.text.toString(), binding.description.text.toString())
             presenter.doSetLocation()
         }
 
@@ -40,8 +42,16 @@ class PlacemarkView : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_placemark, menu)
+        val deleteMenu: MenuItem = menu.findItem(R.id.item_delete)
+        if (presenter.edit){
+            deleteMenu.setVisible(true)
+        }
+        else{
+            deleteMenu.setVisible(false)
+        }
         return super.onCreateOptionsMenu(menu)
     }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {

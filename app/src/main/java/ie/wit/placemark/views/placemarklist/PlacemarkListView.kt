@@ -11,6 +11,7 @@ import ie.wit.placemark.adapters.PlacemarkListener
 import ie.wit.placemark.databinding.ActivityPlacemarkListBinding
 import ie.wit.placemark.main.MainApp
 import ie.wit.placemark.models.PlacemarkModel
+import timber.log.Timber.i
 
 class PlacemarkListView : AppCompatActivity(), PlacemarkListener {
 
@@ -54,5 +55,12 @@ class PlacemarkListView : AppCompatActivity(), PlacemarkListener {
     private fun loadPlacemarks() {
         binding.recyclerView.adapter = PlacemarkAdapter(presenter.getPlacemarks(), this)
         binding.recyclerView.adapter?.notifyDataSetChanged()
+    }
+
+    override fun onResume() {
+        //update the view
+        binding.recyclerView.adapter?.notifyDataSetChanged()
+        i("recyclerView onResume")
+        super.onResume()
     }
 }

@@ -75,8 +75,10 @@ class PlacemarkPresenter(private val view: PlacemarkView) {
             .putExtra("location", location)
         mapIntentLauncher.launch(launcherIntent)
     }
+
+
     fun cachePlacemark (title: String, description: String) {
-        placemark.title = title;
+        placemark.title = title
         placemark.description = description
     }
 
@@ -123,4 +125,5 @@ class PlacemarkPresenter(private val view: PlacemarkView) {
 
             }
     }
+
 }
