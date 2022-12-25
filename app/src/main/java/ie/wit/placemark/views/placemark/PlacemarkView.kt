@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.maps.GoogleMap
 import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
 import ie.wit.placemark.R
@@ -17,6 +18,7 @@ class PlacemarkView : AppCompatActivity() {
     private lateinit var binding: ActivityPlacemarkBinding
     lateinit var presenter: PlacemarkPresenter
     var placemark = PlacemarkModel()
+    lateinit var map: GoogleMap
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +38,12 @@ class PlacemarkView : AppCompatActivity() {
         binding.placemarkLocation.setOnClickListener {
             presenter.cachePlacemark(binding.placemarkTitle.text.toString(), binding.description.text.toString())
             presenter.doSetLocation()
+        }
+
+        binding.mapView2.onCreate(savedInstanceState);
+        binding.mapView2.getMapAsync {
+            map = it
+            presenter.doConfigureMap(map)
         }
 
     }
@@ -83,6 +91,30 @@ class PlacemarkView : AppCompatActivity() {
         if (placemark.image != Uri.EMPTY) {
             binding.chooseImage.setText(R.string.change_placemark_image)
         }
+    }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        binding.mapView2.onDestroy()
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        binding.mapView2.onLowMemory()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        binding.mapView2.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.mapView2.onResume()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        binding.mapView2.onSaveInstanceState(outState)
     }
 }

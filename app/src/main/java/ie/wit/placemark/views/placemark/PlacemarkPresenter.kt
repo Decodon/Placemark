@@ -4,6 +4,10 @@ import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.NetworkPolicy
 import com.squareup.picasso.Picasso
@@ -25,12 +29,20 @@ class PlacemarkPresenter(private val view: PlacemarkView) {
     private lateinit var imageIntentLauncher : ActivityResultLauncher<Intent>
     private lateinit var mapIntentLauncher : ActivityResultLauncher<Intent>
     var edit = false;
+    private val location = Location(52.245696, -7.139102, 15f)
+    var map: GoogleMap? = null
+    //location service
+
 
     init {
         if (view.intent.hasExtra("placemark_edit")) {
             edit = true
             placemark = view.intent.extras?.getParcelable("placemark_edit")!!
             view.showPlacemark(placemark)
+        }
+        else {
+            placemark.lat = location.lat
+            placemark.lng = location.lng
         }
         registerImagePickerCallback()
         registerMapCallback()
@@ -65,17 +77,17 @@ class PlacemarkPresenter(private val view: PlacemarkView) {
     }
 
     fun doSetLocation() {
-        val location = Location(52.245696, -7.139102, 15f)
+
         if (placemark.zoom != 0f) {
             location.lat =  placemark.lat
             location.lng = placemark.lng
             location.zoom = placemark.zoom
+            locationUpdate(placemark.lat, placemark.lng)
         }
         val launcherIntent = Intent(view, EditLocationView::class.java)
             .putExtra("location", location)
         mapIntentLauncher.launch(launcherIntent)
     }
-
 
     fun cachePlacemark (title: String, description: String) {
         placemark.title = title
@@ -126,4 +138,20 @@ class PlacemarkPresenter(private val view: PlacemarkView) {
             }
     }
 
+    fun doConfigureMap(m: GoogleMap) {
+        map = m
+        locationUpdate(placemark.lat, placemark.lng)
+    }
+
+    fun locationUpdate(lat: Double, lng: Double) {
+        placemark.lat = lat
+        placemark.lng = lng
+        placemark.zoom = 15f
+        map?.clear()
+        map?.uiSettings?.setZoomControlsEnabled(true)
+        val options = MarkerOptions().title(placemark.title).position(LatLng(placemark.lat, placemark.lng))
+        map?.addMarker(options)
+        map?.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(placemark.lat, placemark.lng), placemark.zoom))
+        view?.showPlacemark(placemark)
+    }
 }
