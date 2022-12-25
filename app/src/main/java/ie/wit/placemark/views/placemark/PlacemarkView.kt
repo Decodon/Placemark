@@ -35,7 +35,7 @@ class PlacemarkView : AppCompatActivity() {
             presenter.doSelectImage()
         }
 
-        binding.placemarkLocation.setOnClickListener {
+        binding.mapView2.setOnClickListener {
             presenter.cachePlacemark(binding.placemarkTitle.text.toString(), binding.description.text.toString())
             presenter.doSetLocation()
         }
@@ -81,6 +81,7 @@ class PlacemarkView : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
+
     fun showPlacemark(placemark: PlacemarkModel) {
         binding.placemarkTitle.setText(placemark.title)
         binding.description.setText(placemark.description)
@@ -88,9 +89,13 @@ class PlacemarkView : AppCompatActivity() {
         Picasso.get()
             .load(placemark.image)
             .into(binding.placemarkImage)
+
         if (placemark.image != Uri.EMPTY) {
             binding.chooseImage.setText(R.string.change_placemark_image)
         }
+        binding.lat.setText("%.6f".format(placemark.lat))
+        binding.lng.setText("%.6f".format(placemark.lng))
+
     }
 
     override fun onDestroy() {
