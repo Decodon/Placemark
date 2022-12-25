@@ -6,6 +6,8 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -18,6 +20,7 @@ import ie.wit.placemark.R
 import ie.wit.placemark.views.editlocation.EditLocationView
 import ie.wit.placemark.databinding.ActivityPlacemarkBinding
 import ie.wit.placemark.helpers.checkLocationPermissions
+import ie.wit.placemark.helpers.createDefaultLocationRequest
 import ie.wit.placemark.helpers.showImagePicker
 import ie.wit.placemark.main.MainApp
 import ie.wit.placemark.models.Location
@@ -37,6 +40,7 @@ class PlacemarkPresenter(private val view: PlacemarkView) {
     private lateinit var mapIntentLauncher : ActivityResultLauncher<Intent>
     private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
 
+    private val locationRequest = createDefaultLocationRequest()
     private val location = Location(52.245696, -7.139102, 15f)
 
     //location service
@@ -109,6 +113,21 @@ class PlacemarkPresenter(private val view: PlacemarkView) {
         i("setting location from doSetLocation")
         locationService.lastLocation.addOnSuccessListener {
             locationUpdate(it.latitude, it.longitude)
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    fun doRestartLocationUpdates() {
+        var locationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult?) {
+                if (locationResult != null && locationResult.locations != null) {
+                    val l = locationResult.locations.last()
+                    locationUpdate(l.latitude, l.longitude)
+                }
+            }
+        }
+        if (!edit) {
+            locationService.requestLocationUpdates(locationRequest, locationCallback, null)
         }
     }
 

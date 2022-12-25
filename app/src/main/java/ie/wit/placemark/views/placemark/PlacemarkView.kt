@@ -124,6 +124,7 @@ class PlacemarkView : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         binding.mapView2.onResume()
+        presenter.doRestartLocationUpdates()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
