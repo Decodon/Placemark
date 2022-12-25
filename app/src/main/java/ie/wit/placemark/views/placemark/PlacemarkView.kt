@@ -82,9 +82,9 @@ class PlacemarkView : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    fun showPlacemark(placemark: PlacemarkModel) {
-        binding.placemarkTitle.setText(placemark.title)
-        binding.description.setText(placemark.description)
+     fun showPlacemark(placemark: PlacemarkModel) {
+        if (binding.placemarkTitle.text.isEmpty()) binding.placemarkTitle.setText(placemark.title)
+        if (binding.description.text.isEmpty())  binding.description.setText(placemark.description)
 
         Picasso.get()
             .load(placemark.image)
