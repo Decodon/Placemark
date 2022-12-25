@@ -1,9 +1,12 @@
 package ie.wit.placemark.views.placemark
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
@@ -14,38 +17,51 @@ import com.squareup.picasso.Picasso
 import ie.wit.placemark.R
 import ie.wit.placemark.views.editlocation.EditLocationView
 import ie.wit.placemark.databinding.ActivityPlacemarkBinding
+import ie.wit.placemark.helpers.checkLocationPermissions
 import ie.wit.placemark.helpers.showImagePicker
 import ie.wit.placemark.main.MainApp
 import ie.wit.placemark.models.Location
 import ie.wit.placemark.models.PlacemarkModel
 
 import timber.log.Timber
+import timber.log.Timber.i
 
 class PlacemarkPresenter(private val view: PlacemarkView) {
-
+    var map: GoogleMap? = null
     var placemark = PlacemarkModel()
     var app: MainApp = view.application as MainApp
     var binding: ActivityPlacemarkBinding = ActivityPlacemarkBinding.inflate(view.layoutInflater)
+    var edit = false;
+
     private lateinit var imageIntentLauncher : ActivityResultLauncher<Intent>
     private lateinit var mapIntentLauncher : ActivityResultLauncher<Intent>
-    var edit = false;
+    private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
+
     private val location = Location(52.245696, -7.139102, 15f)
-    var map: GoogleMap? = null
+
     //location service
+    var locationService: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(view)
+
 
 
     init {
+
+        registerImagePickerCallback()
+        registerMapCallback()
+        doPermissionLauncher()
+
         if (view.intent.hasExtra("placemark_edit")) {
             edit = true
             placemark = view.intent.extras?.getParcelable("placemark_edit")!!
             view.showPlacemark(placemark)
-        }
-        else {
+        } else {
+            if (checkLocationPermissions(view)) {
+                doSetCurrentLocation()
+            }
             placemark.lat = location.lat
             placemark.lng = location.lng
         }
-        registerImagePickerCallback()
-        registerMapCallback()
+
     }
 
     fun doAddOrSave(title: String, description: String) {
@@ -77,7 +93,6 @@ class PlacemarkPresenter(private val view: PlacemarkView) {
     }
 
     fun doSetLocation() {
-
         if (placemark.zoom != 0f) {
             location.lat =  placemark.lat
             location.lng = placemark.lng
@@ -89,10 +104,41 @@ class PlacemarkPresenter(private val view: PlacemarkView) {
         mapIntentLauncher.launch(launcherIntent)
     }
 
+    @SuppressLint("MissingPermission")
+    fun doSetCurrentLocation() {
+        i("setting location from doSetLocation")
+        locationService.lastLocation.addOnSuccessListener {
+            locationUpdate(it.latitude, it.longitude)
+        }
+    }
+
     fun cachePlacemark (title: String, description: String) {
         placemark.title = title
         placemark.description = description
     }
+
+//    private fun registerImagePickerCallback() {
+//
+//        imageIntentLauncher =
+//            view.registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+//            { result ->
+//                when(result.resultCode){
+//                    AppCompatActivity.RESULT_OK -> {
+//                        if (result.data != null) {
+//                            Timber.i("Got Result ${result.data!!.data}")
+//                            placemark.image = result.data!!.data!!
+//                            Picasso.get()
+//                                .load(placemark.image)
+//                                .networkPolicy(NetworkPolicy.NO_CACHE)
+//                                .memoryPolicy(MemoryPolicy.NO_CACHE)
+//                                .into(binding.placemarkImage)
+//                            binding.chooseImage.setText(R.string.change_placemark_image)
+//                        }
+//                    }
+//                    AppCompatActivity.RESULT_CANCELED -> { } else -> { }
+//                }
+//            }
+//    }
 
     private fun registerImagePickerCallback() {
 
@@ -104,16 +150,12 @@ class PlacemarkPresenter(private val view: PlacemarkView) {
                         if (result.data != null) {
                             Timber.i("Got Result ${result.data!!.data}")
                             placemark.image = result.data!!.data!!
-                            Picasso.get()
-                                .load(placemark.image)
-                                .networkPolicy(NetworkPolicy.NO_CACHE)
-                                .memoryPolicy(MemoryPolicy.NO_CACHE)
-                                .into(binding.placemarkImage)
-                            binding.chooseImage.setText(R.string.change_placemark_image)
+                            view.updateImage(placemark.image)
                         }
                     }
                     AppCompatActivity.RESULT_CANCELED -> { } else -> { }
                 }
+
             }
     }
 
@@ -152,6 +194,43 @@ class PlacemarkPresenter(private val view: PlacemarkView) {
         val options = MarkerOptions().title(placemark.title).position(LatLng(placemark.lat, placemark.lng))
         map?.addMarker(options)
         map?.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(placemark.lat, placemark.lng), placemark.zoom))
-        view?.showPlacemark(placemark)
+        view.showPlacemark(placemark)
     }
+
+    private fun doPermissionLauncher() {
+        i("permission check called")
+        requestPermissionLauncher =
+            view.registerForActivityResult(ActivityResultContracts.RequestPermission())
+            { isGranted: Boolean ->
+                if (isGranted) {
+                    doSetCurrentLocation()
+                } else {
+                    locationUpdate(location.lat, location.lng)
+                }
+            }
+    }
+
+
+//    private fun registerImagePickerCallback() {
+//
+//        imageIntentLauncher =
+//            view.registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+//            { result ->
+//                when(result.resultCode){
+//                    AppCompatActivity.RESULT_OK -> {
+//                        if (result.data != null) {
+//                            Timber.i("Got Result ${result.data!!.data}")
+//                            placemark.image = result.data!!.data!!
+//                            Picasso.get()
+//                                .load(placemark.image)
+//                                .networkPolicy(NetworkPolicy.NO_CACHE)
+//                                .memoryPolicy(MemoryPolicy.NO_CACHE)
+//                                .into(binding.placemarkImage)
+//                            binding.chooseImage.setText(R.string.change_placemark_image)
+//                        }
+//                    }
+//                    AppCompatActivity.RESULT_CANCELED -> { } else -> { }
+//                }
+//            }
+//    }
 }

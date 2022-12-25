@@ -98,6 +98,14 @@ class PlacemarkView : AppCompatActivity() {
         binding.mapView2.onDestroy()
     }
 
+    fun updateImage(image: Uri){
+        i("Image updated")
+        Picasso.get()
+            .load(image)
+            .into(binding.placemarkImage)
+        binding.chooseImage.setText(R.string.change_placemark_image)
+    }
+
     override fun onLowMemory() {
         super.onLowMemory()
         binding.mapView2.onLowMemory()
